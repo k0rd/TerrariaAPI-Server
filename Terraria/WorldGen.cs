@@ -1661,9 +1661,16 @@ namespace Terraria
 										byte b = binaryReader.ReadByte();
 										if (b > 0)
 										{
-											string defaults = Item.VersionName(binaryReader.ReadString(), num);
-											Main.chest[m].item[n].SetDefaults(defaults);
-											Main.chest[m].item[n].stack = (int)b;
+                                            if (num >= 38)
+                                            {
+                                                Main.chest[m].item[n].netDefaults(binaryReader.ReadInt32());
+                                            }
+                                            else
+                                            {
+										        string defaults = Item.VersionName(binaryReader.ReadString(), num);
+										        Main.chest[m].item[n].SetDefaults(defaults);
+										        }
+									    Main.chest[m].item[n].stack = (int)b;
 											if (num >= 36)
 											{
 												Main.chest[m].item[n].Prefix((int)binaryReader.ReadByte());
