@@ -1393,7 +1393,7 @@ namespace Terraria
 				}
 				WorldGen.clearWorld();
 				WorldGen.generateWorld(-1);
-				WorldGen.saveWorld(false);
+				WorldGen.realsaveWorld(false);
 			}
 			if (WorldGen.genRand == null)
 				WorldGen.genRand = new Random((int)DateTime.Now.Ticks);
