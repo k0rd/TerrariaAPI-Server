@@ -157,6 +157,7 @@ namespace Terraria
 			{
 				this.statusCount++;
 			}
+            this.networkStream.EndWrite(ar);
 		}
 		public void ServerReadCallBack(IAsyncResult ar)
 		{

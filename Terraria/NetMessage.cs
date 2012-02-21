@@ -8,17 +8,22 @@ namespace Terraria
         public static messageBuffer[] buffer = new messageBuffer[257];
         public static void SendBytes(ServerSock sock, byte[] buffer, int offset, int count, AsyncCallback callback, object state)
         {
-	IAsyncResult nWriter=null;
+            IAsyncResult nWriter = null;
             try
             {
                 if (NetHooks.OnSendBytes(sock, buffer, offset, count))
                 {
                     return;
                 }
-//                if (Main.runningMono)
-//                   sock.networkStream.Write(buffer, offset, count);
-//                else
-                   nWriter= sock.networkStream.BeginWrite(buffer, offset, count, callback, state);
+                //                if (Main.runningMono)
+                //                   sock.networkStream.Write(buffer, offset, count);
+                //                else
+
+                Console.WriteLine("going to send stream");
+                nWriter = sock.networkStream.BeginWrite(buffer, offset, count, callback, state);
+                Console.WriteLine(nWriter.AsyncWaitHandle.WaitOne(500, false)
+                                      ? "async successfully sent"
+                                      : "async timed out.");
             }
             catch (Exception e)
             {
@@ -26,12 +31,8 @@ namespace Terraria
                 Console.WriteLine(e);
                 sock.kill = true;
             }
-	    finally
-	    {
-//		if (!Main.runningMono)
-		   sock.networkStream.EndWrite(nWriter);
-	    }
         }
+
         public static void SendData(int msgType, int remoteClient = -1, int ignoreClient = -1, string text = "", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f, int number5 = 0)
         {
             int num = 256;
@@ -1545,8 +1546,9 @@ namespace Terraria
                                         NetMessage.SendBytes(Netplay.serverSock[num14], NetMessage.buffer[num].writeBuffer, 0, num2, new AsyncCallback(Netplay.serverSock[num14].ServerWriteCallBack), Netplay.serverSock[num14].networkStream);
                                         //Netplay.serverSock[num14].networkStream.BeginWrite(NetMessage.buffer[num].writeBuffer, 0, num2, new AsyncCallback(Netplay.serverSock[num14].ServerWriteCallBack), Netplay.serverSock[num14].networkStream);
                                     }
-                                    catch
+                                    catch (Exception e)
                                     {
+				   // Console.WriteLine(e);
                                     }
                                 }
                             }
